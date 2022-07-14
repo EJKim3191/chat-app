@@ -109,7 +109,7 @@ function Home() {
           {/* <Link href={'/signIn'}>회원가입</Link> / 아이디찾기 / 비밀번호찾기 */}
           <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>
-                <Link href={'/signIn'}>회원가입</Link>
+                <Link href={'/signUp'}>회원가입</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>아이디찾기</Breadcrumb.Item>
               <Breadcrumb.Item>비밀번호찾기</Breadcrumb.Item>
