@@ -1,17 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router'
 import {
   Layout,
   Form,
   Select,
-  InputNumber,
+  Input,
+  Typography,
+  Checkbox,
   DatePicker,
   Switch,
   Slider,
   Button,
+  Breadcrumb
 } from 'antd';
-
+// import cookies from 'next-cookies'
+import { KeyOutlined, UserOutlined } from '@ant-design/icons';
+import { signInWithEmail } from '../common/firebase/auth';
+import { onUserConnect } from '../common/firebase/userStatus';
+const { Title } = Typography;
 const {
   Header,
   Content,
@@ -20,10 +28,35 @@ const { Item: FormItem } = Form;
 const { Option } = Select;
 
 function Home() {
+  const router = useRouter();
+
+  const onFinish = async(values: any) => {
+    console.log('Success:', values);
+    const result: any = await signInWithEmail(values.username, values.password);
+    if(result._tokenResponse !== undefined && result._tokenResponse.registered === true ){
+      if(result.user.emailVerified){
+        document.cookie = `member = ${result.user.accessToken}; path=/`;
+        onUserConnect();
+        router.push('/next');
+      }
+      else{
+        alert("이메일 인증을 해주세요!")
+      }
+      console.log(result)
+    }
+    else{
+      console.log("로그인 에러")
+    }
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
+  };
+  
   return (
     <React.Fragment>
       <Head>
-        <title>Home - Nextron (with-javascript-ant-design)</title>
+        <title>채팅 프로그램</title>
       </Head>
 
       <Header>
@@ -33,64 +66,56 @@ function Home() {
       </Header>
 
       <Content style={{ padding: 48 }}>
-        <Form layout='horizontal'>
-          <FormItem
-            label='Input Number'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <InputNumber size='large' min={1} max={10} style={{ width: 100 }} defaultValue={3} name='inputNumber' />
-            <a href='#'>Link</a>
-          </FormItem>
+      
+      <Form
+      name="basic"
+      labelCol={{ span: 8 }}
+      wrapperCol={{ span: 8 }}
+      initialValues={{ remember: true }}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      autoComplete="off"
+      >
+        <Form.Item>
+          <Title style={{ maxWidth: '100%' }}>마음연구소</Title>
+        </Form.Item>
+        <Form.Item
+          label="아이디"
+          name="username"
+          rules={[{ required: true, message: '아이디를 입력해주세요' }]}
+        >
+          <Input prefix={<UserOutlined />} />
+        </Form.Item>
 
-          <FormItem
-            label='Switch'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <Switch defaultChecked />
-          </FormItem>
+        <Form.Item
+          label="비밀번호"
+          name="password"
+          rules={[{ required: true, message: '비밀번호를 입력해주세요' }]}
+        >
+          <Input.Password prefix={<KeyOutlined />} />
+        </Form.Item>
 
-          <FormItem
-            label='Slider'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <Slider defaultValue={70} />
-          </FormItem>
+        {/* <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 8 }}>
+          <Checkbox>Remember me</Checkbox>
+        </Form.Item> */}
 
-          <FormItem
-            label='Select'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <Select size='large' defaultValue='lucy' style={{ width: 192 }}>
-              <Option value='jack'>jack</Option>
-              <Option value='lucy'>lucy</Option>
-              <Option value='disabled' disabled>disabled</Option>
-              <Option value='yiminghe'>yiminghe</Option>
-            </Select>
-          </FormItem>
+        <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
+          <Button type="primary" htmlType="submit" block>
+            로그인
+          </Button>
+        </Form.Item>
 
-          <FormItem
-            label='DatePicker'
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 8 }}
-          >
-            <DatePicker name='startDate' />
-          </FormItem>
-          <FormItem
-            style={{ marginTop: 48 }}
-            wrapperCol={{ span: 8, offset: 8 }}
-          >
-            <Button size='large' type='primary' htmlType='submit'>
-              OK
-            </Button>
-            <Button size='large' style={{ marginLeft: 8 }}>
-              Cancel
-            </Button>
-          </FormItem>
-        </Form>
+        <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
+          {/* <Link href={'/signIn'}>회원가입</Link> / 아이디찾기 / 비밀번호찾기 */}
+          <Breadcrumb style={{ margin: '16px 0' }}>
+              <Breadcrumb.Item>
+                <Link href={'/signIn'}>회원가입</Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>아이디찾기</Breadcrumb.Item>
+              <Breadcrumb.Item>비밀번호찾기</Breadcrumb.Item>
+            </Breadcrumb>
+        </Form.Item>
+      </Form>
       </Content>
     </React.Fragment>
   );
