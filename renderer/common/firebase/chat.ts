@@ -93,5 +93,23 @@ export const getGroupChatInfos = async () => {
 }
 
 export const startGroupChat = async (chatRoomUID) => {
+    const chatRoomRef = ref(realtimeDbService, `groupChatRooms/${chatRoomUID}`);
+    const chatMessageRef = ref(realtimeDbService, `groupChatRooms/${chatRoomUID}/lastChatUpdate`);
+    
+    onValue(chatMessageRef, (snap)=>{
+        console.log(snap.val())
+        let selectionFired = new CustomEvent(`message/${chatRoomUID}`, {
+            detail: snap.val(),
+        });
+        window.dispatchEvent(selectionFired);
+    })
 
+}
+
+export const sendGroupChat = async (chatRoomUID, message) => {
+    const uid = authService.currentUser.uid;
+    const displayName = authService.currentUser.displayName;
+    const chatMessageRef = ref(realtimeDbService, `groupChatRooms/${chatRoomUID}/lastChatUpdate`);
+
+    set(chatMessageRef, { message: message, writerUID: uid, displayName: displayName});
 }
