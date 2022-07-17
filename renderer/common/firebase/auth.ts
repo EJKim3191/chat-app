@@ -50,3 +50,13 @@ export const sendEmail = async () => {
         return [errorCode, errorMessage];
     }
 }
+
+export const getMyUID = () => {
+    try {
+        const uid: string = authService.currentUser.uid;
+        return uid;
+    } catch (error) {
+        console.log(error);
+    }
+    
+}
