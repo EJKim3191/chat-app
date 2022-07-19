@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import Head from 'next/head';
 import Link from 'next/link';
@@ -19,6 +19,8 @@ import Users from '../component/Users/index';
 import Chattings from '../component/Chattings/index';
 import GroupChattings from '../component/GroupChattings/index';
 import Settings from '../component/Settings/index';
+import { startChat } from '../common/firebase/chat'
+import { userSignOut } from '../common/firebase/auth'
 const { Header, Footer, Sider, Content } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -47,17 +49,31 @@ const items: MenuItem[] = [
 function Next() {
   const router = useRouter();
 
-  const [currentContent, setCurrentContent] = useState<JSX.Element>(<Users />);
+  const [selectedKeys, setSelectedKeys] = useState(['1']);
+  const startChatWith = (opponentUID, opponentDisplayName) => {
+    setSelectedKeys(()=>['1']);
+    startChat(opponentUID).then(res=> setCurrentContent(<Chattings roomID={res} displayName={opponentDisplayName}/>));
+    
+}
+  const [currentContent, setCurrentContent] = useState<JSX.Element>(<Users startChatWith={startChatWith}/>);
+  useEffect(() => {
+    console.log(selectedKeys)
+  }, [selectedKeys])
+  
+
   const onMenuSelect = (e) => {
-    console.log(e);
     switch(e.key){
       case 'users': 
-        return setCurrentContent(<Users />);
+        setSelectedKeys(()=>['1']);
+        return setCurrentContent(<Users startChatWith={startChatWith}/>);
       case 'chatting': 
+        setSelectedKeys(()=>['2']);
         return setCurrentContent(<Chattings />);
       case 'group_chatting': 
+        setSelectedKeys(()=>['3']);
         return setCurrentContent(<GroupChattings />);
       case 'settings': 
+        setSelectedKeys(()=>['4']);
         return setCurrentContent(<Settings />);
       default:
         return;
@@ -66,15 +82,15 @@ function Next() {
 
   return (
     <React.Fragment>
-      <Layout style={{ width: '100%', height: '500px'}}>
+      <Layout style={{ width: '100%', height: '100%'}}>
         <Sider>
           <div className="logo" />
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onSelect={e => onMenuSelect(e)} />
+          <Menu theme="dark" selectedKeys={selectedKeys} mode="inline" items={items} onSelect={e => onMenuSelect(e)} />
         </Sider>
         <Content style={{ padding: '0 50px' }}>
             {currentContent}
         </Content>
-        <Button onClick={()=> router.push('./home')}>d</Button>
+        <Button onClick={()=> userSignOut().then(()=>{router.push('./home')})}>로그아웃</Button>
       </Layout>
     </React.Fragment>
   );

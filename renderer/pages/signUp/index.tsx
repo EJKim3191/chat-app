@@ -4,13 +4,8 @@ import Link from 'next/link';
 import {
     Layout,
     Form,
-    Select,
     Input,
     Typography,
-    Checkbox,
-    DatePicker,
-    Switch,
-    Slider,
     Button,
 } from 'antd';
 import { KeyOutlined, UserOutlined } from '@ant-design/icons';
@@ -22,7 +17,7 @@ const {
     Content,
 } = Layout;
 
-function Index() {
+function signUp() {
     const router = useRouter();
 
     const onFinish = async(values: any) => {
@@ -46,7 +41,7 @@ function Index() {
 
         <Header>
             <Link href="/home">
-            <a>Go to home page</a>
+            <a>뒤로가기</a>
             </Link>
         </Header>
 
@@ -85,17 +80,9 @@ function Index() {
                 >
                 <Input.Password prefix={<KeyOutlined />} />
                 </Form.Item>
-
-                {/* <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 8 }}>
-                <Checkbox>Remember me</Checkbox>
-                </Form.Item> */}
-
                 <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
                 <Button type="primary" htmlType="submit" block>
                     회원가입
-                </Button>
-                <Button onClick={()=>signInWithGoogle()}>
-                    구글 로그인
                 </Button>
                 </Form.Item>
 
@@ -105,4 +92,4 @@ function Index() {
     );
 };
 
-export default Index;
+export default signUp;
