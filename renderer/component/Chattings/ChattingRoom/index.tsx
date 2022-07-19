@@ -1,21 +1,19 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { startGroupChat, sendGroupChat } from '../../../common/firebase/chat'
+import { startChatRoom, sendChat } from '../../../common/firebase/chat'
 import { getMyUID } from '../../../common/firebase/auth'
-import { UserOutlined} from '@ant-design/icons';
-interface GroupChat {
-    displayName: string,
-    lastChatUpdate: string,
-    members: string[],
-    uid: string,
-}
 interface Chat {
     displayName: string,
+    uid: string,
+}
+interface ChatUI {
+    displayName: string,
     message: string,
-    writerUID: string,
+    uid: string,
 }
 type Props = {
-    roomInfo: GroupChat,
+    roomInfo: Chat,
 }
+
 const chatStyle: React.CSSProperties = {
     display: "inline-block",
     position: "relative", 
@@ -25,19 +23,20 @@ const chatStyle: React.CSSProperties = {
     overflowY: "scroll",
 }
 const myChatCssProps: React.CSSProperties = {
-    width: "100%", 
+    width: "100%",
+    marginTop: "3px",
+    marginBottom: "3px",
     textAlign: "right",
     wordBreak: "break-all",
-    marginBottom: "5px",
 }
 const chatCssProps: React.CSSProperties  = {
     width: "100%",
+    marginTop: "3px",
+    marginBottom: "3px",
     textAlign: "left",
-    marginBottom: "5px",
     wordBreak: "break-all",
 }
-function GroupChattingRoom({roomInfo}: Props) {
-    console.log(roomInfo)
+function ChattingRoom({roomInfo}: Props) {
     const myUID = getMyUID();
     const ref = useRef(window);
     const [chatInput, setChatInput] = useState<string>('');
@@ -47,10 +46,11 @@ function GroupChattingRoom({roomInfo}: Props) {
     const [firstRender, setFirstRender] = useState<boolean>(true);
     useEffect(()=>{
         const handleMessageEvent = (e: CustomEvent)=>{
-            setChat((prev)=>[...prev, e.detail])
+            console.log(e.detail)
+            setChat(e.detail)
         }
         ref.current.addEventListener(`message/${roomInfo.uid}`, handleMessageEvent);
-        startGroupChat(roomInfo.uid);
+        startChatRoom(roomInfo.uid);
 
         return () => {
             ref.current.removeEventListener(`message/${roomInfo.uid}`, handleMessageEvent);
@@ -64,7 +64,7 @@ function GroupChattingRoom({roomInfo}: Props) {
     const sendMessage = () => {
         if(chatInput === '') return;
         // send message
-        sendGroupChat(roomInfo.uid, chatInput);
+        sendChat(roomInfo.uid, chatInput);
         setChatInput('');
     }
     const keyUpHandler = (e) => {
@@ -92,15 +92,12 @@ function GroupChattingRoom({roomInfo}: Props) {
     <React.Fragment>
         <div style={{position: "relative", width: "100%", height: "10%",backgroundColor: "rgb(249,248,248)"}}>
             {roomInfo.displayName}
-            <br/>
-            <UserOutlined />
-            {roomInfo.members.length}
         </div>
         <div style={chatStyle}>
-            {chat.map((chatting: Chat, index)=>{
+            {chat.map((chatting: ChatUI, index)=>{
                 console.log(index);
                 if(index === 0) return;
-                if(chatting.writerUID === myUID){
+                if(chatting.uid === myUID){
                     return(
                         <div ref={messageEndRef} style={myChatCssProps}>
                             <div style={{width: "fit-content", backgroundColor: "rgb(248,227,76)", borderRadius: "5px", marginLeft: "auto", padding: "2px", paddingLeft: "5px", paddingRight: "5px"}}>
@@ -122,7 +119,7 @@ function GroupChattingRoom({roomInfo}: Props) {
             })}
         </div>
         
-        <div style={{position: "relative", top: "0%", width: "100%", height: "20%"}}>
+        <div style={{position: "relative", top: "0%", width: "100%", height: "18%"}}>
             <input style={{width: "100%", height: "100%"}} value={chatInput} onChange={(e)=>setChatInput(e.target.value)} onKeyDown={(e)=>keyDownHandler(e)} onKeyUp={(e)=>keyUpHandler(e)}/>
             <button style={{position: "absolute", bottom: "0%", right: "0%", width: "100px", height: "100%"}} onClick={sendMessage} >전송</button>
         </div>
@@ -131,4 +128,4 @@ function GroupChattingRoom({roomInfo}: Props) {
     );
 };
 
-export default GroupChattingRoom;
+export default ChattingRoom;

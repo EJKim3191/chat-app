@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { getUserOnline } from '../../common/firebase/userStatus'
 import { Avatar, List } from 'antd';
-import { startChat } from '../../common/firebase/chat'
 interface UserList {
     uid: string,
     displayName: string,
 }
-
-function Users() {
+type UserProps = {
+    startChatWith: Function,
+}
+function Users({startChatWith}: UserProps) {
     const [userList, setUserList] = useState<UserList[]>([]);
     
     useEffect(() => {
@@ -19,9 +20,6 @@ function Users() {
         fetchUserData();
     },[])
 
-    const startChatWith = (opponentUID) => {
-        startChat(opponentUID);
-    }
 
     return (
     <React.Fragment>
@@ -32,7 +30,7 @@ function Users() {
             <List.Item>
                 <List.Item.Meta
                 avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                title={<a onClick={()=>startChatWith(user.uid)}>{user.displayName}</a>}
+                title={<a onClick={()=>startChatWith(user.uid, user.displayName)}>{user.displayName}</a>}
                 />
             </List.Item>
             )}
