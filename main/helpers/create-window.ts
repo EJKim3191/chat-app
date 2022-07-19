@@ -13,6 +13,7 @@ export default (windowName: string, options: BrowserWindowConstructorOptions): B
     width: options.width,
     height: options.height,
   };
+
   let state = {};
   let win;
 
@@ -77,7 +78,7 @@ export default (windowName: string, options: BrowserWindowConstructorOptions): B
     },
   };
   win = new BrowserWindow(browserOptions);
-
+  win.setResizable(false);
   win.on('close', saveState);
 
   return win;
