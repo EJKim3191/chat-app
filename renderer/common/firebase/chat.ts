@@ -19,7 +19,6 @@ export const startChat = async (opponentUID) => {
     console.log("startchat");
     const uid = authService.currentUser.uid;
     const displayName = authService.currentUser.displayName;
-    console.log(displayName)
     const myChatRoom = ref(realtimeDbService, `usersChatRoom/${uid}`);
     const myChatRoomWithOppoent = ref(realtimeDbService, `usersChatRoom/${uid}/${opponentUID}`);
     const opponentChatRoom = ref(realtimeDbService, `usersChatRoom/${opponentUID}/${uid}`);
@@ -27,7 +26,7 @@ export const startChat = async (opponentUID) => {
     const oppenentName = await get(oppenentNameRef);
     let hasRoom = false;
     const myList = await get(myChatRoom);
-    console.log(myList.val())
+    console.log(myList.val(), opponentUID)
     for(let key in myList.val()){
         if(key === opponentUID){
             hasRoom = true;
@@ -46,7 +45,11 @@ export const startChat = async (opponentUID) => {
         set(myChatRoomWithOppoent, randomRoomID);
         set(opponentChatRoom, randomRoomID);
         // set(chatRoomRef, ["test"]);
-        set(chatRoomRef, { users: [oppenentName.val(), displayName], chat: ["test"]})
+        const opponent = {};
+        const me = {};
+        opponent[opponentUID] = oppenentName.val();
+        me[uid] = displayName;
+        set(chatRoomRef, { users: [opponent, me], chat: ["chat start"]})
         console.log(randomRoomID)
         return randomRoomID;
     }
@@ -67,6 +70,8 @@ export const getChatRooms = async () => {
 export const getChatInfos = async (uid) => {
     let result: ChatInfo = {user: '', chat: []};
     const myName = authService.currentUser.displayName;
+    const myUID = authService.currentUser.uid;
+    console.log(uid);
     const chatRoomRef = ref(realtimeDbService, `oneOnOneChatRooms/${uid}`);
     const chatRoomInfo = await (await get(chatRoomRef)).val();
     console.log(chatRoomInfo);
@@ -74,13 +79,35 @@ export const getChatInfos = async (uid) => {
     result.chat = chatRoomInfo.chat;
     console.log(myName)
     for(let user in chatRoomInfo.users){
-        console.log(myName)
-        console.log(chatRoomInfo.users[user])
+        console.log(myUID)
+        console.log(Object.keys(chatRoomInfo.users[user]))
         // if(chatRoomInfo.users[user] !== myName) Object.assign(result, { user: chatRoomInfo.users[user] })
-        if(chatRoomInfo.users[user] !== myName) result.user = chatRoomInfo.users[user];
+        if(Object.keys(chatRoomInfo.users[user])[0] !== myUID) result.user = chatRoomInfo.users[user];
     }
     console.log(result)
     return result;
+}
+
+export const startChatRoom = async (chatRoomUID) => {
+    const chatMessageRef = ref(realtimeDbService, `oneOnOneChatRooms/${chatRoomUID}/chat`);
+    
+    onValue(chatMessageRef, (snap)=>{
+        console.log(snap.val())
+        let selectionFired = new CustomEvent(`message/${chatRoomUID}`, {
+            detail: snap.val(),
+        });
+        window.dispatchEvent(selectionFired);
+    })
+}
+
+export const sendChat = async (chatRoomUID, message) => {
+    const uid = authService.currentUser.uid;
+    const displayName = authService.currentUser.displayName;
+    const chatMessageRef = ref(realtimeDbService, `oneOnOneChatRooms/${chatRoomUID}/chat`);
+    const chat = await get(chatMessageRef);
+    console.log(chat.val())
+    console.log([...chat.val(), { message: message, uid: uid, displayName: displayName}]);
+    set(chatMessageRef, [...chat.val(), { message: message, uid: uid, displayName: displayName}]);
 }
 
 export const getGroupChatRooms = async () => {

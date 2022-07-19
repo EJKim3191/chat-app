@@ -1,5 +1,6 @@
-import {  createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult, sendEmailVerification, updateProfile } from "firebase/auth";
-import { authService } from "./firebaseInstance";
+import { signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult, sendEmailVerification, updateProfile, sendPasswordResetEmail } from "firebase/auth";
+import { ref, set } from "@firebase/database";
+import { authService, realtimeDbService } from "./firebaseInstance";
 
 export const signUpWithEmail = async (email, password, nickname) => {
     try {
@@ -55,6 +56,28 @@ export const getMyUID = () => {
     try {
         const uid: string = authService.currentUser.uid;
         return uid;
+    } catch (error) {
+        console.log(error);
+    }
+    
+}
+
+export const passwordReset = async (email) => {
+    try {
+        sendPasswordResetEmail(authService, email)
+    } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+    }
+}
+
+export const userSignOut = async () => {
+    const uid = authService.currentUser.uid;
+    const myConnectionsRef = ref(realtimeDbService, `users/${uid}/connected`); 
+    try {
+        signOut(authService);
+        set(myConnectionsRef, false);
     } catch (error) {
         console.log(error);
     }

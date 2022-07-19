@@ -22,7 +22,7 @@ interface UserList {
 
 export const onUserConnect = () => {
     const uid = authService.currentUser.uid;
-    const myConnectionsRef = ref(realtimeDbService, `users/${uid}/connections`); 
+    const myConnectionsRef = ref(realtimeDbService, `users/${uid}/connected`); 
     const myDisplayNameRef = ref(realtimeDbService, `users/${uid}/displayName`) 
     // stores the timestamp of my last disconnect (the last time I was seen online)
     const lastOnlineRef = ref(realtimeDbService, `users/${uid}/lastOnline`);
