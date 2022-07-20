@@ -26,6 +26,11 @@ function signUp() {
         .then(async ()=>{
             const result: any = await sendEmail();
             console.log(result);
+        })
+        .then(()=>{
+            if(!alert("회원가입이 완료되었습니다. \n이메일 인증 후 사용해주세요")){
+                router.push('./home')
+            }
         });
 
     };
