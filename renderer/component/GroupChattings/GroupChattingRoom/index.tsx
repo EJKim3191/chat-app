@@ -37,7 +37,6 @@ const chatCssProps: React.CSSProperties  = {
     wordBreak: "break-all",
 }
 function GroupChattingRoom({roomInfo}: Props) {
-    console.log(roomInfo)
     const myUID = getMyUID();
     const ref = useRef(window);
     const [chatInput, setChatInput] = useState<string>('');
@@ -56,10 +55,6 @@ function GroupChattingRoom({roomInfo}: Props) {
             ref.current.removeEventListener(`message/${roomInfo.uid}`, handleMessageEvent);
         }
     },[])
-
-    useEffect(()=>{
-        console.log(chat);
-    },[chat])
 
     const sendMessage = () => {
         if(chatInput === '') return;
@@ -100,7 +95,6 @@ function GroupChattingRoom({roomInfo}: Props) {
         </div>
         <div style={chatStyle}>
             {chat.map((chatting: Chat, index)=>{
-                console.log(index);
                 if(index === 0) return;
                 if(chatting.writerUID === myUID){
                     return(

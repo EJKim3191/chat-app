@@ -28,7 +28,6 @@ function Chattings({roomID, displayName}: ChatProps) {
     useEffect(() => {
         async function fetchChatData(){
             const data = await getChatRooms();
-            console.log(data);
             data.forEach(async element => {
                 await getChatInfos(element.uid).then((res) => {
                     Object.assign(res, {uid : element.uid});
@@ -39,18 +38,10 @@ function Chattings({roomID, displayName}: ChatProps) {
 
         };
         fetchChatData();
-        console.log(roomID, displayName)
         if(roomID!==undefined && displayName!==undefined){
             startChatRoom(roomID, displayName);
         }
     },[])
-
-    useEffect(()=>{
-        if(chatList.length >0){
-
-        }
-        console.log(chatList)
-    },[chatList])
 
     const startChatRoom = (uid, displayName) => {
         setChatRoom(true);
@@ -72,7 +63,6 @@ function Chattings({roomID, displayName}: ChatProps) {
             itemLayout="horizontal"
             dataSource={chatList}
             renderItem={chat => {
-                console.log(chat.chat.length)
                 return(
                     <List.Item>
                         <List.Item.Meta

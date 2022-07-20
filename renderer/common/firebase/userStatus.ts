@@ -54,12 +54,10 @@ export const getUserOnline = async () => {
         const response = await get(connectedRef);
         const users = Object.keys(response.val());
         users.forEach(user => {
-            console.log(user, users)
             if(user !== uid){ 
                 if(response.val()[user].connected !== undefined && response.val()[user].connected === true) result.push({uid: user, displayName: response.val()[user].displayName})
             };
         });
-        console.log(typeof result)
         return result;
     } catch (error) {
         console.log(error);

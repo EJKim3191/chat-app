@@ -56,9 +56,6 @@ function Next() {
     
 }
   const [currentContent, setCurrentContent] = useState<JSX.Element>(<Users startChatWith={startChatWith}/>);
-  useEffect(() => {
-    console.log(selectedKeys)
-  }, [selectedKeys])
   
 
   const onMenuSelect = (e) => {

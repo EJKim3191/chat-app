@@ -14,7 +14,6 @@ function Users({startChatWith}: UserProps) {
     useEffect(() => {
         async function fetchUserData(){
             const data = await getUserOnline();
-            console.log(data);
             setUserList(data);
         };
         fetchUserData();

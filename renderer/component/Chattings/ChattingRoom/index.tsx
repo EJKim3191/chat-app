@@ -50,7 +50,6 @@ function ChattingRoom({roomInfo}: Props) {
     const [firstRender, setFirstRender] = useState<boolean>(true);
     useEffect(()=>{
         const handleMessageEvent = (e: CustomEvent)=>{
-            console.log(e.detail)
             setChat(e.detail)
         }
         ref.current.addEventListener(`message/${roomInfo.uid}`, handleMessageEvent);
@@ -60,10 +59,6 @@ function ChattingRoom({roomInfo}: Props) {
             ref.current.removeEventListener(`message/${roomInfo.uid}`, handleMessageEvent);
         }
     },[])
-
-    useEffect(()=>{
-        console.log(chat);
-    },[chat])
 
     const sendMessage = () => {
         if(chatInput === '') return;
@@ -107,7 +102,6 @@ function ChattingRoom({roomInfo}: Props) {
 
         <div style={chatStyle}>
             {chat.map((chatting: ChatUI, index)=>{
-                console.log(index);
                 if(index === 0) return;
                 if(chatting.uid === myUID){
                     return(

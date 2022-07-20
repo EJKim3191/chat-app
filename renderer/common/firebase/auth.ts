@@ -6,7 +6,6 @@ export const signUpWithEmail = async (email, password, nickname) => {
     try {
         const response = await createUserWithEmailAndPassword(authService, email, password)
         .then((res)=>{
-            console.log(res)
             updateProfile(authService.currentUser, {
                 displayName: nickname
             })

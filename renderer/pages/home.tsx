@@ -31,7 +31,6 @@ function Home() {
   const router = useRouter();
 
   const onFinish = async(values: any) => {
-    console.log('Success:', values);
     const result: any = await signInWithEmail(values.username, values.password);
     if(result._tokenResponse !== undefined && result._tokenResponse.registered === true ){
       if(result.user.emailVerified){
@@ -42,7 +41,6 @@ function Home() {
       else{
         alert("이메일 인증을 해주세요!")
       }
-      console.log(result)
     }
     else{
       console.log("로그인 에러")

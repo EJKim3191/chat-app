@@ -16,9 +16,7 @@ function GroupChattings() {
     useEffect(() => {
         async function fetchChatData(){
             getGroupChatRooms().then((res)=>{
-                console.log(res);
                 for(let key in res){
-                    console.log(res[key])
                     setChatList(prev=>[...prev, Object.assign(res[key], {uid: key})])
                 }
                 
@@ -27,10 +25,6 @@ function GroupChattings() {
         };
         fetchChatData();
     },[])
-
-    useEffect(()=>{
-        console.log(chatList)
-    },[chatList])
 
     const enterGroupChat = (roomInfo) => {
         return (<GroupChattingRoom roomInfo={roomInfo}/>)
