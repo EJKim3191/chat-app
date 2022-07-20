@@ -14,6 +14,8 @@ export const signUpWithEmail = async (email, password, nickname) => {
         return response;
     } catch (error) {
         console.log(error);
+        console.log(error.code)
+        if(error.code === "auth/email-already-in-use") alert("사용중인 이메일입니다!")
         return error;
     }
     
@@ -25,6 +27,7 @@ export const signInWithEmail = async (email, password) => {
         return response;
     } catch (error) {
         console.log(error);
+        if(error.code === "auth/user-not-found") alert("아이디 혹은 비밀번호를 확인해주세요")
         return error;
     }
 }
