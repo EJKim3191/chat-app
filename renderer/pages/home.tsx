@@ -37,7 +37,7 @@ function Home() {
       if(result.user.emailVerified){
         document.cookie = `member = ${result.user.accessToken}; path=/`;
         onUserConnect();
-        router.push('/next');
+        router.push('./next');
       }
       else{
         alert("이메일 인증을 해주세요!")
