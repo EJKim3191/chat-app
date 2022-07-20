@@ -90,11 +90,13 @@ function GroupChattingRoom({roomInfo}: Props) {
 
     return (
     <React.Fragment>
-        <div style={{position: "relative", width: "100%", height: "10%",backgroundColor: "rgb(249,248,248)"}}>
-            {roomInfo.displayName}
-            <br/>
-            <UserOutlined />
-            {roomInfo.members.length}
+        <div style={{display: "inline-block", position: "relative", width: "100%", height: "8%",backgroundColor: "rgb(249,248,248)"}}>
+            <div style={{position: "absolute", marginLeft: "10px"}}>
+                {roomInfo.displayName}
+                <br/>
+                <UserOutlined />
+                {roomInfo.members.length}
+            </div>
         </div>
         <div style={chatStyle}>
             {chat.map((chatting: Chat, index)=>{

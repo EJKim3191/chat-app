@@ -1,6 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { startChatRoom, sendChat } from '../../../common/firebase/chat'
 import { getMyUID } from '../../../common/firebase/auth'
+import {
+    UserOutlined,
+    LeftSquareFilled,
+  } from '@ant-design/icons';
 interface Chat {
     displayName: string,
     uid: string,
@@ -90,9 +94,17 @@ function ChattingRoom({roomInfo}: Props) {
 
     return (
     <React.Fragment>
-        <div style={{position: "relative", width: "100%", height: "10%",backgroundColor: "rgb(249,248,248)"}}>
-            {roomInfo.displayName}
+        <div style={{ display: "inline-block", position: "relative", width: "100%", height: "10%",backgroundColor: "rgb(249,248,248)"}}>
+            <div style={{position: "absolute", marginLeft: "10px"}}>
+                {roomInfo.displayName}
+                <br/>
+                <UserOutlined /> 2
+            </div>
+            <div style={{width: "100%", textAlign: "right"}}>
+                <LeftSquareFilled style={{fontSize: "30px", color: "rgb(68,142,247)", marginLeft: "auto"}}/>
+            </div>
         </div>
+
         <div style={chatStyle}>
             {chat.map((chatting: ChatUI, index)=>{
                 console.log(index);
