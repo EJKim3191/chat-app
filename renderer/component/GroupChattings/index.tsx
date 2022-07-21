@@ -27,7 +27,11 @@ function GroupChattings() {
     },[])
 
     const enterGroupChat = (roomInfo) => {
-        return (<GroupChattingRoom roomInfo={roomInfo}/>)
+        return (<GroupChattingRoom roomInfo={roomInfo} exitChatRoom={exitChatRoom}/>)
+    }
+    const exitChatRoom = () => {
+        setRoomState(false);
+        setRoomInfo(null);
     }
     return (
         <React.Fragment>

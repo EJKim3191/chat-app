@@ -16,6 +16,7 @@ interface ChatUI {
 }
 type Props = {
     roomInfo: Chat,
+    exitChatRoom: Function,
 }
 
 const chatStyle: React.CSSProperties = {
@@ -40,7 +41,7 @@ const chatCssProps: React.CSSProperties  = {
     textAlign: "left",
     wordBreak: "break-all",
 }
-function ChattingRoom({roomInfo}: Props) {
+function ChattingRoom({roomInfo, exitChatRoom}: Props) {
     const myUID = getMyUID();
     const ref = useRef(window);
     const [chatInput, setChatInput] = useState<string>('');
@@ -96,7 +97,7 @@ function ChattingRoom({roomInfo}: Props) {
                 <UserOutlined /> 2
             </div>
             <div style={{width: "100%", textAlign: "right"}}>
-                <LeftSquareFilled style={{fontSize: "30px", color: "rgb(68,142,247)", marginLeft: "auto"}}/>
+                <LeftSquareFilled style={{fontSize: "30px", color: "rgb(68,142,247)", marginLeft: "auto"}} onClick={()=>exitChatRoom()}/>
             </div>
         </div>
 
