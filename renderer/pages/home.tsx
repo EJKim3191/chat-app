@@ -48,7 +48,7 @@ function Home() {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:');
+    console.log('Failed:', errorInfo);
   };
   
   return (

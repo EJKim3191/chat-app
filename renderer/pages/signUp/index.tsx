@@ -21,15 +21,13 @@ function signUp() {
     const router = useRouter();
 
     const onFinish = async(values: any) => {
-        console.log('Success:', values);
         signUpWithEmail(values.username, values.password, values.nickname)
         .then(async ()=>{
             const result: any = await sendEmail();
         })
         .then(()=>{
-            if(!alert("회원가입이 완료되었습니다. \n이메일 인증 후 사용해주세요")){
-                router.push('./home')
-            }
+            alert("회원가입이 완료되었습니다. \n이메일 인증 후 사용해주세요")
+            router.push('./home')
         });
 
     };

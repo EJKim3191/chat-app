@@ -3,7 +3,8 @@ import { Avatar, List } from 'antd';
 import { getChatRooms, startChat, getChatInfos } from '../../common/firebase/chat'
 import ChattingRoom from './ChattingRoom';
 interface ChattingList {
-    chat: string[],
+    uid?: any;
+    chat: retrunType[],
     user: string,
     // displayName: string,
 }
@@ -16,10 +17,19 @@ type chat = {
     uid: string,
 }
 // user에서 사용자를 클릭하여 들어왔을 때
-// 
+type retrunType = {
+    message: string,
+    uid: string,
+    displayName: string,
+}
 type ChatProps = {
     roomID?: string,
     displayName?: string,
+}
+type chatting = {
+    uid: string,
+    chatting: string,
+    user: string
 }
 function Chattings({roomID, displayName}: ChatProps) {
     const [chatList, setChatList] = useState<ChattingList[]>([]);
@@ -53,8 +63,12 @@ function Chattings({roomID, displayName}: ChatProps) {
         setRoomInfo(temp);
     }
     const enterChatRoom = () => {
-        return (<ChattingRoom roomInfo={roomInfo}/>)
+        return (<ChattingRoom roomInfo={roomInfo} exitChatRoom={exitChatRoom}/>)
         
+    }
+    const exitChatRoom = () => {
+        setChatRoom(false);
+        setRoomInfo(null);
     }
     return (
     <React.Fragment>

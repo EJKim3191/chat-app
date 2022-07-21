@@ -13,7 +13,12 @@ interface ChattingList {
 }
 interface ChatInfo {
     user: string,
-    chat: string[],
+    chat: retrunType[],
+}
+type retrunType = {
+    message: string,
+    uid: string,
+    displayName: string,
 }
 export const startChat = async (opponentUID) => {
     const uid = authService.currentUser.uid;

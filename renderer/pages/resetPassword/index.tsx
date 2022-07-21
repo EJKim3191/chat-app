@@ -23,9 +23,8 @@ function resetPassword() {
     const onFinish = async(values: any) => {
         passwordReset(values.username)
         .then(()=>{
-            if(!alert("이메일을 확인해주세요")){
-                router.push('./home')
-            }
+            alert("이메일을 확인해주세요")
+            router.push('./home')
         })
     };
     

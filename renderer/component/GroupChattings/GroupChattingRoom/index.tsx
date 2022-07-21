@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { startGroupChat, sendGroupChat } from '../../../common/firebase/chat'
 import { getMyUID } from '../../../common/firebase/auth'
-import { UserOutlined} from '@ant-design/icons';
+import { UserOutlined, LeftSquareFilled } from '@ant-design/icons';
 interface GroupChat {
     displayName: string,
     lastChatUpdate: string,
@@ -15,6 +15,7 @@ interface Chat {
 }
 type Props = {
     roomInfo: GroupChat,
+    exitChatRoom: Function,
 }
 const chatStyle: React.CSSProperties = {
     display: "inline-block",
@@ -36,14 +37,13 @@ const chatCssProps: React.CSSProperties  = {
     marginBottom: "5px",
     wordBreak: "break-all",
 }
-function GroupChattingRoom({roomInfo}: Props) {
+function GroupChattingRoom({roomInfo, exitChatRoom}: Props) {
     const myUID = getMyUID();
     const ref = useRef(window);
     const [chatInput, setChatInput] = useState<string>('');
     const [isShiftUsed, setIsShiftUsed] = useState<boolean>(false);
     const [chat, setChat] = useState<object[]>([]);
     const messageEndRef = useRef(null);
-    const [firstRender, setFirstRender] = useState<boolean>(true);
     useEffect(()=>{
         const handleMessageEvent = (e: CustomEvent)=>{
             setChat((prev)=>[...prev, e.detail])
@@ -91,6 +91,9 @@ function GroupChattingRoom({roomInfo}: Props) {
                 <br/>
                 <UserOutlined />
                 {roomInfo.members.length}
+            </div>
+            <div style={{width: "100%", textAlign: "right"}}>
+                <LeftSquareFilled style={{fontSize: "30px", color: "rgb(68,142,247)", marginLeft: "auto"}} onClick={()=>exitChatRoom()}/>
             </div>
         </div>
         <div style={chatStyle}>
